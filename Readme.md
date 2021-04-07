@@ -1,5 +1,5 @@
-# Log Compiler v. 1.5
-![](https://img.shields.io/badge/release-1.5-blue)
+# Log Compiler
+![](https://img.shields.io/badge/version-1.5-blue)
 
 Original design by Arawn
 
