@@ -50,8 +50,7 @@ Switches the utility to area report mode. Note that most of this functionality i
 Specifies that the provided primary term is a cd key for crawling search.
 
 **-prof_cn**
-
-Specifies that the provided primary term is a character name for crawling search.
+>Specifies that the provided primary term is a character name for crawling search.
 
 **-prof_pn**
 
