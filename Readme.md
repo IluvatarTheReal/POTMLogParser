@@ -34,45 +34,59 @@ The order in which flags are included does not matter; the only constant is that
 Here is a (hopefully complete) list of flags and a brief description:
 
 **-post**
+
 With an argument, only returns results after a given date (in the format DD MM YY). Requires an argument.
 
 **-pre**
+
 With an argument, only returns results before a given date (in the format DD MM YY). Requires an argument.
 
 **-ar**
+
 Switches the utility to area report mode. Note that most of this functionality is automated and will disregard most other flags (except -post and -pre).
 
 **-prof_cd**
+
 Specifies that the provided primary term is a cd key for crawling search.
 
 **-prof_cn**
+
 Specifies that the provided primary term is a character name for crawling search.
 
 **-prof_pn**
+
 Specifies that the provided primary term is a player name for crawling search.
 
 **-prof_ip**
+
 Specifies that the provided primary term is an ip address for crawling search.
 
 **-nf**
+
 Do not generate an output file. Print output to console.
 
 **-conf**
+
 Sets the confidence level (number of steps away from origin) for crawling search.
 
 **-a**
+
 Specifies an additional search term that MUST be found in a given line. Requires an argument.
 
 **-e**
+
 Exclude all lines containing this term. Requires an argument.
 
 **-noo**
+
 Discard all standard output; this can be used to print only the results of crawling search.
 
 **-nd**
+
 Include lines not containing a valid timestamp (Discarded by default as noise).
 
 **-p**
+
 Print output to the console as well as generating an output file. Mutually exclusive with -nf.
 
 ## III. Crawling Search
