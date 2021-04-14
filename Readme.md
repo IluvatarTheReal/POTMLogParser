@@ -8,7 +8,7 @@ Original design by Arawn
 The Log Parser is a utility designed to work in concert with Ravenloft: Prisoners of the Mist's NWServer setup. Due to the specific configuration of directories
 and log entries on PotM's server, this utility will not work out-of-the-box with any other server's backend.
 
-## III. Usage
+## II. Usage
 The core utility is run by using the command ./log_parser in the console window to open the executable provided (by default in the logs_ee directory). The 
 utility will not work unless at least one search term is provided. If this is a single word, it can be provided without quotes, such as:
 ```bash
@@ -62,6 +62,9 @@ Sets the confidence level (number of steps away from origin) for crawling search
 
 **-a**  
 Specifies an additional search term that MUST be found in a given line. Requires an argument.
+
+**-0**  
+Specifies an additional search term the parser will try to match, it act as a OR condition.
 
 **-e**  
 Exclude all lines containing this term. Requires an argument.
