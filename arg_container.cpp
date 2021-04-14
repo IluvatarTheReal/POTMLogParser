@@ -47,10 +47,17 @@ unsigned arg_container::size() {
 }
 
 std::vector<const char*> arg_container::get_cumulative_params(std::string str) {
-	if (!(*this)[str]) return {};
-	std::vector<const char*> ret = {};
-	for (auto& item : _vals) if (item.first == str) ret.insert(ret.end(), item.second.c_str());
-	return ret;
+	if (!(*this)[str]) 
+		return {};
+
+	std::vector<const char*> value = {};
+
+	for (auto& item : _vals) {
+		if (item.first == str)
+			value.insert(value.end(), item.second.c_str());
+	}
+		
+	return value;
 }
 
 void arg_container::print() {

@@ -15,6 +15,7 @@ namespace ARGS {
 	constexpr const char* NF = "nf";
 	constexpr const char* CONF = "conf";
 	constexpr const char* A = "a";
+	constexpr const char* O = "o";
 	constexpr const char* E = "e";
 	constexpr const char* NOO = "noo";
 	constexpr const char* ND = "nd";

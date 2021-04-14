@@ -9,13 +9,15 @@ int main(int argc, char* argv[]) {
 	std::cout << "\n       **************************\n";
 	std::cout << "       *     LOG PARSER V" << VER_NUM << "    *\n";
 	std::cout << "       **************************\n" << std::endl;
-	std::cout << "              by Arawn\n" << std::endl;
-	
+	std::cout << "                by Arawn\n" << std::endl;
+
 	//Set up basic search containers.
 	std::vector<const char*> parse_strings = {};
 	//First argument is assumed to be a search string if present.
 	std::string term = args.term();
-	if (term != "") parse_strings.emplace_back(term.c_str());
+
+	if (term != "")
+		parse_strings.emplace_back(term.c_str());
 
 	//Initialize vector to hold strings we've already searched to prevent duplication
 	std::vector<const char*> strings_parsed = {};
@@ -29,8 +31,12 @@ int main(int argc, char* argv[]) {
 	//Set up globals
 	std::tm post_time;
 	std::tm pre_time;
-	if (args[ARGS::POST]) post_time = utils::get_arg_time(args.val(ARGS::POST), utils::relative_time::after);
-	if (args[ARGS::PRE]) pre_time = get_arg_time(args.val(ARGS::PRE), utils::relative_time::before);
+
+	if (args[ARGS::POST])
+		post_time = utils::get_arg_time(args.val(ARGS::POST), utils::relative_time::after);
+
+	if (args[ARGS::PRE])
+		pre_time = get_arg_time(args.val(ARGS::PRE), utils::relative_time::before);
 
 	//set up containers
 	std::vector<result_line> results;
@@ -55,27 +61,41 @@ int main(int argc, char* argv[]) {
 		crawling_search = true;
 	}
 	playerdata_container::playerdata profiles_to_search;
-	playerdata_container pc(parse_strings.size() > 0? parse_strings.at(0) : "", temp_type, strings_parsed, profiles_to_search);
+	playerdata_container pc(parse_strings.size() > 0 ? parse_strings.at(0) : "", temp_type, strings_parsed, profiles_to_search);
 
 	//open output file
 	std::string name = utils::get_outfile_name();
 	std::fstream outfile;
 	if (!args[ARGS::NF]) {
 		outfile.open(name, std::fstream::out);
-		if (outfile) std::cout << "\nOutput file \"" + name + "\" opened successfully." << std::endl;
-		else std::cout << "\nOutput file \"" + name + "\" not opened." << std::endl;
+		if (outfile)
+			std::cout << "\nOutput file \"" + name + "\" opened successfully." << std::endl;
+		else
+			std::cout << "\nOutput file \"" + name + "\" not opened." << std::endl;
 	}
 	else std::cout << "\nOutput redirected to browser, no file created." << std::endl;
 
-	for (auto addition : args.get_cumulative_params(ARGS::A)) parse_strings.insert(parse_strings.end(), addition);
+	for (auto addition : args.get_cumulative_params(ARGS::A))
+		parse_strings.insert(parse_strings.end(), addition);
+
+	//Any term here will be validated along with the primary term, one of these or the primary term must be present during the search.
+	std::vector<const char*> orTerm = {};
+	for (auto addition : args.get_cumulative_params(ARGS::O))
+		orTerm.insert(orTerm.end(), addition);
+
+	std::cout << "\nCurrent OR cnt: " << orTerm.size();
+
 	std::vector<const char*> exclusions = args.get_cumulative_params(ARGS::E);
 
 	//we've consumed the search term, now discard it.
-	if (crawling_search) parse_strings.clear();
+	if (crawling_search)
+		parse_strings.clear();
 
 	//Set up confidence level	
 	int confidence_level = 1;
-	if (args[ARGS::CONF]) confidence_level = std::atoi(args.val(ARGS::CONF).c_str());
+	if (args[ARGS::CONF])
+		confidence_level = std::atoi(args.val(ARGS::CONF).c_str());
+
 	if (confidence_level > 10) {
 		std::cout << "Confidence level too high, set to 10." << std::endl;
 		confidence_level = 10;
@@ -84,8 +104,9 @@ int main(int argc, char* argv[]) {
 		std::cout << "Confidence level too low, set to 1." << std::endl;
 		confidence_level = 1;
 	}
+
 	int tconf = confidence_level;
-	
+
 	//iterate over input files (and subdirectories)
 	const fs::path Path = fs::current_path();
 
@@ -101,38 +122,51 @@ int main(int argc, char* argv[]) {
 	std::vector<const char*> remaining = {};
 	std::vector<const char*> current_pass;
 	int loopsize = parse_strings.size() + remaining.size();
-	if (args[ARGS::AR]) loopsize = 1;
+
+	if (args[ARGS::AR]) 
+		loopsize = 1;
 
 	//Begin main iteration loop
 	while (loopsize && tconf > 0) {
 		//Mark character data points as searched for crawling search
 		pc.mark_checked();
-		
+
 		//Print information about search if this isn't an area report.
 		if (!args[ARGS::AR]) {
-			std::vector<const char*> temp_strings = {}; 
-			for (auto& it : parse_strings) temp_strings.insert(temp_strings.end(), it);
-			for (auto& it : remaining) temp_strings.insert(temp_strings.end(), it);
+			std::vector<const char*> temp_strings = {};
+
+			for (auto& it : parse_strings) 
+				temp_strings.insert(temp_strings.end(), it);
+			for (auto& it : remaining) 
+				temp_strings.insert(temp_strings.end(), it);
+
 			int size = temp_strings.size();
-			std::cout << (crawling_search? "Crawling " : "Parsing ") << " files for " << (size > 1? "strings " : "string ");
-			for (int x = 0; x < size; ++x) std::cout << "\"" << temp_strings[x] << (size > (x + 1)? "\", " : "\".\n");
-			for (auto& it : parse_strings) current_pass.insert(current_pass.end(), it);
-			if (tconf != 1) std::cout << "With confidence level of " << confidence_level << "." << std::endl;
-			else std::cout << std::endl;
+			std::cout << (crawling_search ? "Crawling " : "Parsing ") << " files for " << (size > 1 ? "strings " : "string ");
+
+			for (int x = 0; x < size; ++x)
+				std::cout << "\"" << temp_strings[x] << (size > (x + 1) ? "\", " : "\".\n");
+			for (auto& it : parse_strings) 
+				current_pass.insert(current_pass.end(), it);
+
+			if (tconf != 1) 
+				std::cout << "With confidence level of " << confidence_level << "." << std::endl;
+			else 
+				std::cout << std::endl;
 		}
-		else std::cout << "Parsing files for area usage reports.\n" << std::endl;
+		else 
+			std::cout << "Parsing files for area usage reports.\n" << std::endl;
 
 		//Main parse loop.
 		for (const auto& it : fs::recursive_directory_iterator(Path)) {
 			//Grab first file.
 			std::string filepath = it.path().filename().string();
 			//Make sure we're not trying to parse a parsed log. That way lies insanity. If we are, skip!
-			if (filepath.find(OUTFILE_STRING) != std::string::npos) continue; 
+			if (filepath.find(OUTFILE_STRING) != std::string::npos) continue;
 
 			//Identify the target file and make sure it's the right kind of file.
 			auto pos = filepath.find_last_of(".");
-			if (pos == std::string::npos || filepath.substr(pos) != ".txt" || filepath.find("nwserverLog") == std::string::npos) continue; 
-			
+			if (pos == std::string::npos || filepath.substr(pos) != ".txt" || filepath.find("nwserverLog") == std::string::npos) continue;
+
 			//Open the file and skip if the file doesn't open.
 			std::fstream file_to_parse;
 			if (!file_to_parse.is_open()) file_to_parse.open(it.path().string());
@@ -153,8 +187,23 @@ int main(int argc, char* argv[]) {
 			//Advances as long as a valid line can be read in.
 			for (result_line line; line.advance(file_to_parse); ) {
 				//If text searching and the line doesn't conform, skip.
-				if (!line.check_line(current_pass, exclusions)) continue;
-		
+				if (!line.check_line(current_pass, exclusions))
+				{					
+					bool found_match = false;
+					//Test the or term ONE BY ONE
+					for (int i = 0; i < orTerm.size(); i++)
+					{					
+						
+						std::vector<const char*> current_orTerm = { orTerm[i] };
+						if (line.check_line(current_orTerm, exclusions)) {							
+							found_match = true;							
+						}													
+					}	
+
+					if (!found_match)
+						continue;					
+				}					
+
 				line._time.tm_year = log_created_time.tm_year;
 				int mon = line._time.tm_mon;
 				if (mon < highest_month) {
@@ -163,12 +212,16 @@ int main(int argc, char* argv[]) {
 				}
 				else if (mon > highest_month) highest_month = mon;
 				bool line_good = true;
-								
+
 				//If not an area report, process line for search
 				if (!args[ARGS::AR]) {
 					if (line.time_good || args[ARGS::ND]) {
-						if (args[ARGS::POST] && std::mktime(&line._time) < std::mktime(&post_time)) line_good = false;
-						if (args[ARGS::PRE] && std::mktime(&line._time) > std::mktime(&pre_time)) line_good = false;
+						if (args[ARGS::POST] && std::mktime(&line._time) < std::mktime(&post_time))
+							line_good = false;
+
+						if (args[ARGS::PRE] && std::mktime(&line._time) > std::mktime(&pre_time))
+							line_good = false;
+
 						//If line matches parameters, deal with it
 						if (line_good) {
 							//If no output is not selected, add the line to Results to print later.
@@ -226,7 +279,7 @@ int main(int argc, char* argv[]) {
 	if (!args[ARGS::AR]) {
 		std::cout << "\nSorting results..." << std::endl;
 		if (results.empty() && !args[ARGS::NOO]) outfile << "No valid results found." << std::endl;
-		else {		
+		else {
 			std::sort(results.begin(), results.end(), [](result_line& lhs, result_line& rhs) {	return lhs < rhs;	});
 			if ((args[ARGS::NF] || args[ARGS::P]) && (results.empty() && !args[ARGS::AR])) std::cout << "No valid results found." << std::endl;
 			else {
@@ -298,7 +351,7 @@ int main(int argc, char* argv[]) {
 	if (args[ARGS::AR]) {
 		std::cout << "\nProcessing area reports...\n";
 		std::vector<usage_area> compiled_areas;
-		
+
 		for (auto& it : usage_areas) {
 			auto f = std::find(compiled_areas.begin(), compiled_areas.end(), it);
 			if (f != compiled_areas.end()) {
@@ -321,8 +374,8 @@ int main(int argc, char* argv[]) {
 		{
 			std::cout << "Sorting results..." << std::endl;
 			std::sort(compiled_areas.begin(), compiled_areas.end(), [](usage_area& lhs, usage_area& rhs) {
-					return (lhs < rhs);
-					});
+				return (lhs < rhs);
+				});
 			if (!args[ARGS::NF]) print_report(outfile, pre_time, post_time, args, compiled_areas);
 			if (args[ARGS::P] || args[ARGS::NF]) print_report(std::cout, pre_time, post_time, args, compiled_areas);
 		}

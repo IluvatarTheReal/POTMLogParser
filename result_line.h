@@ -33,10 +33,17 @@ struct result_line {
 		return mktime(&_time) < mktime(&(rhs._time));
 	}
 	bool check_line(std::vector<const char*>& search_terms, std::vector<const char*> exclusions) {
-		for (auto& it : exclusions) if (_text.find(it) != std::string::npos) return false;
+		for (auto& it : exclusions)
+			if (_text.find(it) != std::string::npos)
+				return false;
+
 		if (search_terms.size() > 0) {
 			bool found = true;
-			for (auto& it : search_terms) if (_text.find(it) == std::string::npos) found = false;
+
+			for (auto& it : search_terms)
+				if (_text.find(it) == std::string::npos)
+					found = false;
+
 			return found;
 		}
 		return false;
