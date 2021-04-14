@@ -78,12 +78,8 @@ int main(int argc, char* argv[]) {
 	for (auto addition : args.get_cumulative_params(ARGS::A))
 		parse_strings.insert(parse_strings.end(), addition);
 
-	//Any term here will be validated along with the primary term, one of these or the primary term must be present during the search.
-	std::vector<const char*> orTerm = {};
-	for (auto addition : args.get_cumulative_params(ARGS::O))
-		orTerm.insert(orTerm.end(), addition);
-
-	std::cout << "\nCurrent OR cnt: " << orTerm.size();
+	//Any term here will be validated along with the primary term, one of these or the primary term must be present during the search.	
+	std::vector<const char*> orTerm = args.get_cumulative_params(ARGS::O);
 
 	std::vector<const char*> exclusions = args.get_cumulative_params(ARGS::E);
 
@@ -141,10 +137,16 @@ int main(int argc, char* argv[]) {
 				temp_strings.insert(temp_strings.end(), it);
 
 			int size = temp_strings.size();
-			std::cout << (crawling_search ? "Crawling " : "Parsing ") << " files for " << (size > 1 ? "strings " : "string ");
-
+			std::cout << (crawling_search ? "Crawling " : "Parsing ") << " files for " << (size > 1 ? "strings " : "string ");			
 			for (int x = 0; x < size; ++x)
 				std::cout << "\"" << temp_strings[x] << (size > (x + 1) ? "\", " : "\".\n");
+
+			if (orTerm.size() > 0) {
+				std::cout << "OR ";								
+				for (int x = 0; x < orTerm.size(); ++x)
+					std::cout << "\"" << orTerm[x] << (orTerm.size() > (x + 1) ? "\", " : "\".\n");
+			}				
+
 			for (auto& it : parse_strings) 
 				current_pass.insert(current_pass.end(), it);
 
@@ -190,10 +192,9 @@ int main(int argc, char* argv[]) {
 				if (!line.check_line(current_pass, exclusions))
 				{					
 					bool found_match = false;
-					//Test the or term ONE BY ONE
+					//Test the or term ONE BY ONE (Multiple OR cannot be supplied through command line yet, but this code will support it in the future)
 					for (int i = 0; i < orTerm.size(); i++)
-					{					
-						
+					{											
 						std::vector<const char*> current_orTerm = { orTerm[i] };
 						if (line.check_line(current_orTerm, exclusions)) {							
 							found_match = true;							
