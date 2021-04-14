@@ -1,6 +1,6 @@
 
 # Log Compiler
-![](https://img.shields.io/badge/version-1.5-blue)
+![](https://img.shields.io/badge/version-1.6-blue)
 
 Original design by Arawn
 
