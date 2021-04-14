@@ -63,7 +63,7 @@ Sets the confidence level (number of steps away from origin) for crawling search
 **-a**  
 Specifies an additional search term that MUST be found in a given line. Requires an argument.
 
-**-0**  
+**-o**  
 Specifies an additional search term the parser will try to match, it act as a OR condition.
 
 **-e**  
