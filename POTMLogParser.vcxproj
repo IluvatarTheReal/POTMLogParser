@@ -75,8 +75,22 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
+    <ClCompile Include="arg_container.cpp" />
+    <ClCompile Include="playerdata_container.cpp" />
+    <ClCompile Include="Source.cpp" />
   </ItemGroup>
-  <ItemDefinitionGroup />
+  <ItemGroup>
+    <ClInclude Include="arg_container.h" />
+    <ClInclude Include="playerdata_container.h" />
+    <ClInclude Include="result_line.h" />
+    <ClInclude Include="usage_area.h" />
+    <ClInclude Include="utils.h" />
+  </ItemGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <CustomBuildStep>
+      <Inputs>%(Inputs)</Inputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
 </Project>
