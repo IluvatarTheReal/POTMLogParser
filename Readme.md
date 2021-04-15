@@ -83,6 +83,53 @@ Crawling search is an experimental functionality that allows this utility to com
 given player, identified by any one of the aforementioned pieces of information. It does this by repeatedly iterating over the logs, pulling all player data from
 any profile that matches at least one data point, then iterating again over any non-matches. This is experimental functionality and not guaranteed to be accurate.
 
+## IV. Updates and setup
+This shell script can be used to automatically look for the a new version of the parser and compile it or setup the parser for a first use. The easiest way is to create the shell script in the directory containing the log files (or where the log parser is to be executed) and launch the it. It will either clone or pull the latest version of the parser and compiler it. Should any compiling error happen they will be printed in the console. Please relay them directly to Iluvatar or create an issue ticket detailing the problem on the github repository of this project.
+
+```shell
+#!/bin/sh
+
+echo "Looking for log_parser source code..."
+
+DIR="POTMLogParser/"
+if [ -d "$DIR" ]; then
+    echo "\e[1;32mSource code found!\e[1;0m 
+Pulling latest version from github..."
+		  
+	cd POTMLogParser
+	git pull
+	cd ..
+else
+	echo "\e[1;31mNo source code found.\e[1;0m
+Cloning repository from github..."
+		  
+	git clone https://github.com/IluvatarTheReal/POTMLogParser
+fi
+
+cd POTMLogParser
+echo "\e[1;36mBuilding log_parser source code...\e[1;0m"
+make
+cd ..
+
+
+PARSER=log_parser
+if test -f "$PARSER"; then
+    echo "An old version of the log_parser was found.
+Deleting previous log_parser..."
+	rm log_parser	
+fi
+
+echo ""
+
+cp POTMLogParser/log_parser log_parser
+sudo chmod +x log_parser
+
+echo "log_parser ready to use! Use the log_parser this way :
+./log_parser <argument>"
+
+```
+
+
 ## IV. Updates (obselete)
 Before running the utility, it is often a good idea to check if a new version is available. A batch script to automatically update the utility is included. Simply
 run ./update_parser in the same directory as the compiled executable to execute the script and automatically update the parser. Any errors in compiling will be
