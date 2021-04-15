@@ -83,6 +83,5 @@ given player, identified by any one of the aforementioned pieces of information.
 any profile that matches at least one data point, then iterating again over any non-matches. This is experimental functionality and not guaranteed to be accurate.
 
 ***  IV. UPDATES ***
-Before running the utility, it is often a good idea to check if a new version is available. A batch script to automatically update the utility is included. Simply
-run ./update_parser in the same directory as the compiled executable to execute the script and automatically update the parser. Any errors in compiling will be
-displayed in the console window. If this occurs, please relay them to Arawn directly.
+If you have the shell script to automatically handle updating the log parser tool, running it before using the parser is a good idea. If you do not have the script, it can be found on the github repository : https://github.com/IluvatarTheReal/POTMLogParser#readme
+If any problem occurs during the update, they will printed on the console, please relay them directly to Iluvatar.
