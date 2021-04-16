@@ -25,8 +25,10 @@ std::vector<playerdata_container::playerdata>& playerdata_container::data() {
 
 void playerdata_container::handle_line(std::string line) {
 	auto temp_data = read_data(line);
-	if (present(temp_data)) {
+
+	if (!present(temp_data)) {
 		_data.insert(_data.end(), temp_data);
+
 		for (auto t : types()) {
 			auto& vec_to_check = get_field_vector(_pdata_to_search, t);
 			for (auto& str : get_field_vector(temp_data, t)) {
@@ -54,7 +56,11 @@ void playerdata_container::mark_checked() {
 
 playerdata_container::playerdata playerdata_container::read_data(std::string line) {
 	std::vector<const char*> exclusions = { "<->", "<O>", "<->", "<X>", "<!>", "Login info: ", "gp to raise", "DM " };
-	for (auto& it : exclusions) if (line.find(it) != std::string::npos) return playerdata();
+
+	for (auto& it : exclusions) {
+		if (line.find(it) != std::string::npos)
+			return playerdata();
+	}
 
 	auto pos0 = line.find("]");
 	auto pos1 = line.find("(ID:");
@@ -66,20 +72,31 @@ playerdata_container::playerdata playerdata_container::read_data(std::string lin
 	line = line.substr(pos0, pos2 < pos3 ? pos2 - pos0 : pos3 - pos0);
 	pos0 = line.find("(ID");
 
+	//std::cout << "------------\n" << std::endl;
+
 	playerdata data;
 	std::string cname = line.substr(0, pos0);
 	utils::trim(cname);
 	data.charnames.emplace_back(cname.c_str());
+	//std::cout << "Character: " << cname.c_str() << std::endl;
+
 	line = line.substr(pos0 + 4);
 	pos0 = line.find("/");
 	data.ids.emplace_back(line.substr(0, pos0).c_str());
+	//std::cout << "ID: " << line.substr(0, pos0).c_str() << std::endl;
+
 	line = line.substr(pos0 + 1);
 	pos0 = line.find("/");
 	data.pnames.emplace_back(line.substr(0, pos0).c_str());
+	//std::cout << "Playername: " << line.substr(0, pos0).c_str() << std::endl;
+
 	line = line.substr(pos0 + 1);
 	pos0 = line.find("/");
 	data.cdkeys.emplace_back(line.substr(0, pos0).c_str());
+	//std::cout << "CD: " << line.substr(0, pos0).c_str() << std::endl;
+
 	data.ips.emplace_back(line.substr(pos0 + 1).c_str());
+	//std::cout << "IP: " << line.substr(pos0 + 1).c_str() << std::endl;
 
 	return data;
 }
@@ -91,6 +108,15 @@ bool playerdata_container::checked(std::string str) {
 }
 
 bool playerdata_container::present(playerdata& pdata) {
-	for (auto t : types()) for (auto& result : get_field_vector(_pdata_to_search, t)) for (auto& new_text : get_field_vector(pdata, t)) if (result == new_text) return true;
+	for (auto t : types()) {
+		for (auto& result : get_field_vector(_pdata_to_search, t)) {
+			for (auto& new_text : get_field_vector(pdata, t))
+			{
+				if (result == new_text)	
+					return true;									
+			}
+		}
+	}
+	
 	return false;
 }

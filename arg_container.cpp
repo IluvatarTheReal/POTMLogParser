@@ -13,14 +13,19 @@ arg_container::arg_container(int argc, char* argv[]) {
 	std::string last_flag = "";
 	for (; count < argc; ++count) {
 		std::string temp = argv[count];
+
 		if (temp.substr(0, 1) == "-") {
+			
 			if (temp.length() < 2) {
 				std::cout << "Ill-formed flag detected." << std::endl;
 				return;
 			}
-			temp = temp.substr(1);
-			if (last_flag != "") _vals.emplace(last_flag, "");
-			last_flag = temp;
+
+			//temp = temp.substr(1);
+			if (last_flag != "") 
+				_vals.emplace(last_flag, "");			
+
+			last_flag = temp.substr(1);
 		}
 		else if (last_flag == "") {
 			std::cout << "Ill-formed flag detected." << std::endl;
@@ -31,7 +36,9 @@ arg_container::arg_container(int argc, char* argv[]) {
 			last_flag = "";
 		}
 	}
-	if (last_flag != "") _vals.emplace(last_flag, "");
+
+	if (last_flag != "")
+		_vals.emplace(last_flag, "");	
 }
 
 bool arg_container::operator[](std::string str) {
@@ -39,7 +46,7 @@ bool arg_container::operator[](std::string str) {
 }
 
 std::string arg_container::val(std::string str) {
-	return ((*this)[str])? _vals.at(str) : "";
+	return ((*this)[str]) ? _vals.at(str) : "";
 }
 
 unsigned arg_container::size() {
@@ -47,7 +54,7 @@ unsigned arg_container::size() {
 }
 
 std::vector<const char*> arg_container::get_cumulative_params(std::string str) {
-	if (!(*this)[str]) 
+	if (!(*this)[str])
 		return {};
 
 	std::vector<const char*> value = {};
@@ -56,7 +63,7 @@ std::vector<const char*> arg_container::get_cumulative_params(std::string str) {
 		if (item.first == str)
 			value.insert(value.end(), item.second.c_str());
 	}
-		
+
 	return value;
 }
 

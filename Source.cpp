@@ -83,11 +83,12 @@ int main(int argc, char* argv[]) {
 
 	std::vector<const char*> exclusions = args.get_cumulative_params(ARGS::E);
 
-	//we've consumed the search term, now discard it.
-	if (crawling_search)
-		parse_strings.clear();
+	//Iluvatar : Doing this prevent any kind of research for the crawling, why was it added?
+	//we've consumed the search term, now discard it. 
+	/*if (crawling_search)
+		parse_strings.clear();*/
 
-	//Set up confidence level	
+		//Set up confidence level	
 	int confidence_level = 1;
 	if (args[ARGS::CONF])
 		confidence_level = std::atoi(args.val(ARGS::CONF).c_str());
@@ -119,7 +120,7 @@ int main(int argc, char* argv[]) {
 	std::vector<const char*> current_pass;
 	int loopsize = parse_strings.size() + remaining.size();
 
-	if (args[ARGS::AR]) 
+	if (args[ARGS::AR])
 		loopsize = 1;
 
 	//Begin main iteration loop
@@ -131,31 +132,31 @@ int main(int argc, char* argv[]) {
 		if (!args[ARGS::AR]) {
 			std::vector<const char*> temp_strings = {};
 
-			for (auto& it : parse_strings) 
+			for (auto& it : parse_strings)
 				temp_strings.insert(temp_strings.end(), it);
-			for (auto& it : remaining) 
+			for (auto& it : remaining)
 				temp_strings.insert(temp_strings.end(), it);
 
 			int size = temp_strings.size();
-			std::cout << (crawling_search ? "Crawling " : "Parsing ") << " files for " << (size > 1 ? "strings " : "string ");			
+			std::cout << (crawling_search ? "Crawling " : "Parsing ") << " files for " << (size > 1 ? "strings " : "string ");
 			for (int x = 0; x < size; ++x)
 				std::cout << "\"" << temp_strings[x] << (size > (x + 1) ? "\", " : "\".\n");
 
 			if (orTerm.size() > 0) {
-				std::cout << "OR ";								
+				std::cout << "OR ";
 				for (int x = 0; x < orTerm.size(); ++x)
 					std::cout << "\"" << orTerm[x] << (orTerm.size() > (x + 1) ? "\", " : "\".\n");
-			}				
+			}
 
-			for (auto& it : parse_strings) 
+			for (auto& it : parse_strings)
 				current_pass.insert(current_pass.end(), it);
 
-			if (tconf != 1) 
+			if (tconf != 1)
 				std::cout << "With confidence level of " << confidence_level << "." << std::endl;
-			else 
+			else
 				std::cout << std::endl;
 		}
-		else 
+		else
 			std::cout << "Parsing files for area usage reports.\n" << std::endl;
 
 		//Main parse loop.
@@ -190,20 +191,20 @@ int main(int argc, char* argv[]) {
 			for (result_line line; line.advance(file_to_parse); ) {
 				//If text searching and the line doesn't conform, skip.
 				if (!line.check_line(current_pass, exclusions))
-				{					
+				{
 					bool found_match = false;
 					//Test the or term ONE BY ONE (Multiple OR cannot be supplied through command line yet, but this code will support it in the future)
 					for (int i = 0; i < orTerm.size(); i++)
-					{											
+					{
 						std::vector<const char*> current_orTerm = { orTerm[i] };
-						if (line.check_line(current_orTerm, exclusions)) {							
-							found_match = true;							
-						}													
-					}	
+						if (line.check_line(current_orTerm, exclusions)) {
+							found_match = true;
+						}
+					}
 
 					if (!found_match)
-						continue;					
-				}					
+						continue;
+				}
 
 				line._time.tm_year = log_created_time.tm_year;
 				int mon = line._time.tm_mon;
@@ -228,7 +229,8 @@ int main(int argc, char* argv[]) {
 							//If no output is not selected, add the line to Results to print later.
 							if (!args[ARGS::NOO]) results.emplace_back(line);
 							//If crawling search is indicated, handle it.
-							if (crawling_search) pc.handle_line(line._text);
+							if (crawling_search)
+								pc.handle_line(line._text);
 						}
 					}
 				}
@@ -257,7 +259,8 @@ int main(int argc, char* argv[]) {
 			current_pass.clear();
 
 			//Get remaining character info to parse for crawling search.
-			for (auto& it : remaining) strings_parsed.insert(strings_parsed.end(), it);
+			for (auto& it : remaining)
+				strings_parsed.insert(strings_parsed.end(), it);
 			remaining = pc.get_remaining();
 
 			//Check to see how many searches remain
@@ -266,8 +269,10 @@ int main(int argc, char* argv[]) {
 				files_processed = 0;
 				std::cout << std::endl;
 				std::cout << "Strings left to parse(" << loopsize << "): \n";
-				for (auto& it : parse_strings) std::cout << it << "\n";
-				for (auto& it : remaining) std::cout << it << "\n";
+				for (auto& it : parse_strings) 
+					std::cout << &it << "\n";
+				for (auto& it : remaining) 
+					std::cout << &it << "\n";
 				std::cout << std::endl;
 			}
 			tconf--;
@@ -279,33 +284,66 @@ int main(int argc, char* argv[]) {
 	//Process results
 	if (!args[ARGS::AR]) {
 		std::cout << "\nSorting results..." << std::endl;
-		if (results.empty() && !args[ARGS::NOO]) outfile << "No valid results found." << std::endl;
+		if (results.empty() && !args[ARGS::NOO])
+			outfile << "No valid results found." << std::endl;
 		else {
 			std::sort(results.begin(), results.end(), [](result_line& lhs, result_line& rhs) {	return lhs < rhs;	});
-			if ((args[ARGS::NF] || args[ARGS::P]) && (results.empty() && !args[ARGS::AR])) std::cout << "No valid results found." << std::endl;
+			if ((args[ARGS::NF] || args[ARGS::P]) && (results.empty() && !args[ARGS::AR]))
+				std::cout << "No valid results found." << std::endl;
 			else {
 				for (auto& it : results) {
-					if (it._text.substr(0, 1) == ".") it._text = it._text.substr(1);
+					if (it._text.substr(0, 1) == ".")
+						it._text = it._text.substr(1);
 					else {
 						if (!args[ARGS::NOO]) {
-							if (args[ARGS::P] || args[ARGS::NF]) std::cout << it._text << std::endl;
-							if (!args[ARGS::NF]) outfile << it._text << "\r\n";
+							if (args[ARGS::P] || args[ARGS::NF])
+								std::cout << it._text << std::endl;
+							if (!args[ARGS::NF])
+								outfile << it._text << "\r\n";
 						}
 					}
 				}
 			}
+
 			if (crawling_search) {
-				if (args[ARGS::NF] || args[ARGS::P]) {
-					std::cout << "\nPlayerdata Report:\n";
-					std::cout << "\nCharacter names:\n";
+				if (/*args[ARGS::NF] || args[ARGS::P]*/true) {
+					
 					auto& stream = args[ARGS::NF] ? std::cout : outfile;
-					std::vector<std::string> names;
-					for (auto& it : pc.data()) {
-						for (auto& it2 : it.charnames) if (it2 != "" && std::find(names.begin(), names.end(), it2) == names.end()) {
-							stream << "    " << it2 << "\n";
-							names.emplace_back(it2);
+
+					stream << "\nPlayerdata Report:\n";
+					stream << "\nCharacter names:\n";
+
+					std::vector<playerdata_container::playerdata> theData = pc.data();
+					
+
+					std::cout << "\nCharacter names:\n" << std::endl;
+					for (int i = 0; i < theData.size(); i++)
+					{
+						playerdata_container::playerdata currentData = theData[i];
+
+						for (int j = 0; j < currentData.pnames.size(); j++)
+						{
+							std::cout << "    " << currentData.pnames[j] << "\n";
 						}
 					}
+
+					
+
+					/*for (auto& it : profiles_to_search.pnames) {
+						std::cout << "    " << it << "\n";
+					}
+*/
+
+					std::vector<std::string> names;
+					for (auto& it : pc.data()) {
+						for (auto& it2 : it.charnames) {
+							if (it2 != "" && std::find(names.begin(), names.end(), it2) == names.end()) {
+								stream << "    " << it2 << "\n";
+								names.emplace_back(it2);
+							}
+						}
+					}
+
 					stream << "\nPlayer names:\n";
 					std::vector<std::string> pnames;
 					for (auto& it : pc.data()) {
@@ -321,6 +359,7 @@ int main(int argc, char* argv[]) {
 							pnames.emplace_back(it2);
 						}
 					}
+
 					stream << "\nCD Keys:\n";
 					std::vector<std::string> keys;
 					for (auto& it : pc.data()) {
@@ -336,14 +375,18 @@ int main(int argc, char* argv[]) {
 							keys.emplace_back(it2);
 						}
 					}
+
 					stream << "\nIPs:\n";
 					std::vector<std::string> addys;
 					for (auto& it : pc.data()) {
-						for (auto& it2 : it.ips) if (it2 != "" && std::find(addys.begin(), addys.end(), it2) == addys.end()) {
-							stream << "    " << it2 << "\n";
-							addys.emplace_back(it2);
-						}
+						for (auto& it2 : it.ips) {
+							if (it2 != "" && std::find(addys.begin(), addys.end(), it2) == addys.end()) {
+								stream << "    " << it2 << "\n";
+								addys.emplace_back(it2);
+							}
+						}							
 					}
+
 					stream << std::endl;
 				}
 			}
