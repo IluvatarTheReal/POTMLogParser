@@ -2,6 +2,17 @@
 #include "arg_container.h"
 #include "usage_area.h"
 
+
+void print_line(std::string line);
+void print_crawling_results(playerdata_container& pc_data);
+
+
+bool print_console = false;
+bool print_file = true;
+
+std::fstream outfile;
+
+
 int main(int argc, char* argv[]) {
 	//Load configuration
 	arg_container args(argc, argv);
@@ -15,6 +26,9 @@ int main(int argc, char* argv[]) {
 	std::vector<const char*> parse_strings = {};
 	//First argument is assumed to be a search string if present.
 	std::string term = args.term();
+
+	print_file = !args[ARGS::NF];
+	print_console = args[ARGS::P] || args[ARGS::NF];
 
 	if (term != "")
 		parse_strings.emplace_back(term.c_str());
@@ -65,8 +79,8 @@ int main(int argc, char* argv[]) {
 
 	//open output file
 	std::string name = utils::get_outfile_name();
-	std::fstream outfile;
-	if (!args[ARGS::NF]) {
+	//std::fstream outfile;
+	if (print_file) {
 		outfile.open(name, std::fstream::out);
 		if (outfile)
 			std::cout << "\nOutput file \"" + name + "\" opened successfully." << std::endl;
@@ -269,10 +283,10 @@ int main(int argc, char* argv[]) {
 				files_processed = 0;
 				std::cout << std::endl;
 				std::cout << "Strings left to parse(" << loopsize << "): \n";
-				for (auto& it : parse_strings) 
-					std::cout << &it << "\n";
-				for (auto& it : remaining) 
-					std::cout << &it << "\n";
+				for (auto& it : parse_strings)
+					std::cout << it << "\n";
+				for (auto& it : remaining)
+					std::cout << it << "\n";
 				std::cout << std::endl;
 			}
 			tconf--;
@@ -288,7 +302,7 @@ int main(int argc, char* argv[]) {
 			outfile << "No valid results found." << std::endl;
 		else {
 			std::sort(results.begin(), results.end(), [](result_line& lhs, result_line& rhs) {	return lhs < rhs;	});
-			if ((args[ARGS::NF] || args[ARGS::P]) && (results.empty() && !args[ARGS::AR]))
+			if (print_console && (results.empty() && !args[ARGS::AR]))
 				std::cout << "No valid results found." << std::endl;
 			else {
 				for (auto& it : results) {
@@ -296,25 +310,23 @@ int main(int argc, char* argv[]) {
 						it._text = it._text.substr(1);
 					else {
 						if (!args[ARGS::NOO]) {
-							if (args[ARGS::P] || args[ARGS::NF])
-								std::cout << it._text << std::endl;
-							if (!args[ARGS::NF])
-								outfile << it._text << "\r\n";
+							print_line(it._text);
 						}
 					}
 				}
 			}
 
 			if (crawling_search) {
+				print_crawling_results(pc);
 				if (/*args[ARGS::NF] || args[ARGS::P]*/true) {
-					
+
 					auto& stream = args[ARGS::NF] ? std::cout : outfile;
 
 					stream << "\nPlayerdata Report:\n";
 					stream << "\nCharacter names:\n";
 
 					std::vector<playerdata_container::playerdata> theData = pc.data();
-					
+
 
 					std::cout << "\nCharacter names:\n" << std::endl;
 					for (int i = 0; i < theData.size(); i++)
@@ -327,7 +339,7 @@ int main(int argc, char* argv[]) {
 						}
 					}
 
-					
+
 
 					/*for (auto& it : profiles_to_search.pnames) {
 						std::cout << "    " << it << "\n";
@@ -384,7 +396,7 @@ int main(int argc, char* argv[]) {
 								stream << "    " << it2 << "\n";
 								addys.emplace_back(it2);
 							}
-						}							
+						}
 					}
 
 					stream << std::endl;
@@ -427,4 +439,19 @@ int main(int argc, char* argv[]) {
 
 	if (!args[ARGS::NF]) std::cout << "Operation complete (see file " << name << ")." << std::endl;
 	else std::cout << "Operation complete." << std::endl;
+}
+
+
+void print_line(std::string line) {
+
+	if (print_console)
+		std::cout << line << std::endl;
+	if (print_file)
+		outfile << line << "\r\n";
+	//Handle adding line to console output/file
+
+}
+
+void print_crawling_results(playerdata_container& pc_data) {
+
 }

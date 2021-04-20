@@ -21,7 +21,7 @@ namespace fs = std::experimental::filesystem;
 //constant definitions
 constexpr const char* OUTFILE_STRING = "synthetic_log";
 constexpr int BARS = 50;
-constexpr float VER_NUM = 1.6f;
+constexpr float VER_NUM = 1.7f;
 constexpr const char* ws = " \t\n\r\f\v";
 
 namespace utils {
