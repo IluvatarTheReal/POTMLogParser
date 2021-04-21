@@ -464,7 +464,7 @@ void print_crawling_results(playerdata_container& pc_data) {
 			{
 				if (character.length() > 1) {
 					cd_keys_string = "";
-					playername_cd_keys = pc_data.find_cd_key_for(i.character_name, playerdata_container::type::CHARNAME);
+					playername_cd_keys = pc_data.find_cd_key_for(character, playerdata_container::type::CHARNAME);
 					for (auto& j : playername_cd_keys) {
 						if (cd_keys_string == "")
 							cd_keys_string += j;
