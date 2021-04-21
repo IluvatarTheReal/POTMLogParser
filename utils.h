@@ -101,5 +101,12 @@ namespace utils {
 		return t;
 	}
 
+	inline bool vector_string_val_exist(std::vector<std::string>& the_vector, std::string the_value) {
+
+		if (std::find(the_vector.begin(), the_vector.end(), the_value) != the_vector.end())
+			return true;
+
+		return false;
+	}
 
 }

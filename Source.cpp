@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "playerdata_container.h"
 #include "arg_container.h"
 #include "usage_area.h"
@@ -5,6 +6,7 @@
 
 void print_line(std::string line);
 void print_crawling_results(playerdata_container& pc_data);
+//bool vector_string_val_exist(std::vector<std::string>& the_vector, std::string the_value);
 
 
 bool print_console = false;
@@ -318,89 +320,69 @@ int main(int argc, char* argv[]) {
 
 			if (crawling_search) {
 				print_crawling_results(pc);
-				if (/*args[ARGS::NF] || args[ARGS::P]*/true) {
+				//if (/*args[ARGS::NF] || args[ARGS::P]*/true) {
 
-					auto& stream = args[ARGS::NF] ? std::cout : outfile;
+				//	auto& stream = args[ARGS::NF] ? std::cout : outfile;
 
-					stream << "\nPlayerdata Report:\n";
-					stream << "\nCharacter names:\n";
-
-					std::vector<playerdata_container::playerdata> theData = pc.data();
+				//	stream << "\nPlayerdata Report:\n";
+				//	stream << "\nCharacter names:\n";
 
 
-					std::cout << "\nCharacter names:\n" << std::endl;
-					for (int i = 0; i < theData.size(); i++)
-					{
-						playerdata_container::playerdata currentData = theData[i];
+				//	std::vector<std::string> names;
+				//	for (auto& it : pc.data()) {
+				//		for (auto& it2 : it.charnames) {
+				//			if (it2 != "" && std::find(names.begin(), names.end(), it2) == names.end()) {
+				//				stream << "    " << it2 << "\n";
+				//				names.emplace_back(it2);
+				//			}
+				//		}
+				//	}
 
-						for (int j = 0; j < currentData.pnames.size(); j++)
-						{
-							std::cout << "    " << currentData.pnames[j] << "\n";
-						}
-					}
+				//	stream << "\nPlayer names:\n";
+				//	std::vector<std::string> pnames;
+				//	for (auto& it : pc.data()) {
+				//		for (auto& it2 : it.pnames) if (it2 != "" && std::find(pnames.begin(), pnames.end(), it2) == pnames.end()) {
+				//			stream << "    " << it2 << "\n";
+				//			int size = it.cdkeys.size();
+				//			for (auto& it3 : it.cdkeys) {
+				//				stream << " " << it3;
+				//				if (size > 1) stream << ",";
+				//				size--;
+				//			}
+				//			stream << ")\n";
+				//			pnames.emplace_back(it2);
+				//		}
+				//	}
 
+				//	stream << "\nCD Keys:\n";
+				//	std::vector<std::string> keys;
+				//	for (auto& it : pc.data()) {
+				//		for (auto& it2 : it.cdkeys) if (it2 != "" && std::find(keys.begin(), keys.end(), it2) == keys.end()) {
+				//			stream << "    " << it2 << " (Usernames:";
+				//			int size = it.pnames.size();
+				//			for (auto& it3 : it.pnames) {
+				//				stream << " " << it3;
+				//				if (size > 1) stream << ",";
+				//				size--;
+				//			}
+				//			stream << ")\n";
+				//			keys.emplace_back(it2);
+				//		}
+				//	}
 
+				//	stream << "\nIPs:\n";
+				//	std::vector<std::string> addys;
+				//	for (auto& it : pc.data()) {
+				//		for (auto& it2 : it.ips) {
+				//			if (it2 != "" && std::find(addys.begin(), addys.end(), it2) == addys.end()) {
+				//				stream << "    " << it2 << "\n";
+				//				addys.emplace_back(it2);
+				//			}
+				//		}
+				//	}
 
-					/*for (auto& it : profiles_to_search.pnames) {
-						std::cout << "    " << it << "\n";
-					}
-*/
-
-					std::vector<std::string> names;
-					for (auto& it : pc.data()) {
-						for (auto& it2 : it.charnames) {
-							if (it2 != "" && std::find(names.begin(), names.end(), it2) == names.end()) {
-								stream << "    " << it2 << "\n";
-								names.emplace_back(it2);
-							}
-						}
-					}
-
-					stream << "\nPlayer names:\n";
-					std::vector<std::string> pnames;
-					for (auto& it : pc.data()) {
-						for (auto& it2 : it.pnames) if (it2 != "" && std::find(pnames.begin(), pnames.end(), it2) == pnames.end()) {
-							stream << "    " << it2 << "\n";
-							int size = it.cdkeys.size();
-							for (auto& it3 : it.cdkeys) {
-								stream << " " << it3;
-								if (size > 1) stream << ",";
-								size--;
-							}
-							stream << ")\n";
-							pnames.emplace_back(it2);
-						}
-					}
-
-					stream << "\nCD Keys:\n";
-					std::vector<std::string> keys;
-					for (auto& it : pc.data()) {
-						for (auto& it2 : it.cdkeys) if (it2 != "" && std::find(keys.begin(), keys.end(), it2) == keys.end()) {
-							stream << "    " << it2 << " (Usernames:";
-							int size = it.pnames.size();
-							for (auto& it3 : it.pnames) {
-								stream << " " << it3;
-								if (size > 1) stream << ",";
-								size--;
-							}
-							stream << ")\n";
-							keys.emplace_back(it2);
-						}
-					}
-
-					stream << "\nIPs:\n";
-					std::vector<std::string> addys;
-					for (auto& it : pc.data()) {
-						for (auto& it2 : it.ips) {
-							if (it2 != "" && std::find(addys.begin(), addys.end(), it2) == addys.end()) {
-								stream << "    " << it2 << "\n";
-								addys.emplace_back(it2);
-							}
-						}
-					}
-
-					stream << std::endl;
-				}
+				//	stream << std::endl;
+				//}
 			}
 		}
 	}
@@ -453,5 +435,80 @@ void print_line(std::string line) {
 }
 
 void print_crawling_results(playerdata_container& pc_data) {
+	print_line("------------------------------------------");
+	print_line("\nPlayerdata Report:");
+	print_line("\nBy player names:");
 
+	std::vector<std::string> printed_player_name;
+	for (auto& i : pc_data.player_lines)
+	{
+		//find_cd_key_for
+
+		if (i.character_name != "" && !utils::vector_string_val_exist(printed_player_name, i.player_name)) {
+
+			std::string cd_keys_string = "";
+			std::vector<std::string> playername_cd_keys = pc_data.find_cd_key_for(i.player_name, playerdata_container::type::PNAME);
+			for (auto& j : playername_cd_keys) {
+				if (cd_keys_string == "")
+					cd_keys_string += j;
+				else
+					cd_keys_string += ", " + j;
+			}
+
+			print_line("    " + i.player_name + "(" + cd_keys_string + ")" + "");
+			printed_player_name.push_back(i.player_name);
+
+			
+			std::vector<std::string> playername_characters = pc_data.find_data_type_for(i.player_name, playerdata_container::type::PNAME, playerdata_container::type::CHARNAME);
+			for (auto& character : playername_characters)
+			{
+				cd_keys_string = "";
+				playername_cd_keys = pc_data.find_cd_key_for(i.player_name, playerdata_container::type::PNAME);
+				for (auto& j : playername_cd_keys) {
+					if (cd_keys_string == "")
+						cd_keys_string += j;
+					else
+						cd_keys_string += ", " + j;
+				}
+
+				print_line("        " + character + "(" + cd_keys_string + ")" + "");
+			}			
+		}
+	}
+
+	//Playerdata report
+
+	//  PlayerName 1 (CD_Key 1, CD_Key 2)  //Here we could guess that CD_Key 2 was use to peek at the player's vault
+	//		Char 1 (CD_Key 1)
+	//		Char 2 (CD_Key 1)
+	//  PlayerName 2(CD_Key 3, CD_Key 4) //Here we could guess that CD_Key 4 was use to peek at the player's vault and to log on character 5
+	//		Char 3 (CD_Key 3 )
+	//		Char 4 (CD_Key 3)
+	//		Char 5 (CD_Key 3, CD_Key 4)
+
+
+	print_line("\n------------------------------------------");
+	print_line("\nData lines:");
+
+	for (auto& i : pc_data.player_lines) {
+		print_line("\n");
+		print_line("CD Key: " + i.cd_key);
+		print_line("IP: " + i.ip);
+		print_line("Playername: " + i.player_name);
+		print_line("Character name: " + i.character_name);
+		print_line("ID: " + i.id);
+	}
+
+	print_line("------------------------------------------");
 }
+
+
+
+
+//bool vector_string_val_exist(std::vector<std::string>& the_vector, std::string the_value) {
+//
+//	if (std::find(the_vector.begin(), the_vector.end(), the_value) != the_vector.end())
+//		return true;
+//
+//	return false;
+//}

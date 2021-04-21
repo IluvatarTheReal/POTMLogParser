@@ -1,4 +1,5 @@
 #include "playerdata_container.h"
+#include <regex>
 
 playerdata_container::playerdata_container(const char* str, type t, std::vector<const char*>& strings_parsed, playerdata& pdata) : _strings_parsed(strings_parsed), _pdata_to_search(pdata) {
 	get_field_vector(_pdata_to_search, t).emplace_back(str);
@@ -54,30 +55,17 @@ void playerdata_container::handle_line(std::string line) {
 	
 }
 
-std::vector<const char*> playerdata_container::get_remaining() {
-	std::vector<const char*> ret = {};
-	for (auto t : types())
-		for (auto& str : get_field_vector(_pdata_to_search, t))
-			if (!checked(str))
-				ret.insert(ret.end(), str);
-	return ret;
-}
-
-void playerdata_container::mark_checked() {
-	for (auto t : types()) {
-		for (auto& str : get_field_vector(_pdata_to_search, t)) {
-			_strings_parsed.insert(_strings_parsed.end(), str);
-		}
-	}
-}
-
 playerdata_container::playerdata playerdata_container::read_data(std::string line) {
-	std::vector<const char*> exclusions = { "<->", "<O>", "<->", "<X>", "<!>", "Login info: ", "gp to raise", "DM " };
+	std::vector<const char*> exclusions = { "<->", "<O>", "<I>", "<X>", "<!>", "Login info: ", "gp to raise", "DM " };
 
+	//If the line is about a player login on a vault, read the line differently.
+	if (line.find("Joined as Player") != std::string::npos)
+		return get_joined_player_data(line);	
+	
 	for (auto& it : exclusions) {
 		if (line.find(it) != std::string::npos)
 			return playerdata_container::playerdata();
-	}
+	}	
 
 	//TODO Use regex to find information
 
@@ -95,9 +83,9 @@ playerdata_container::playerdata playerdata_container::read_data(std::string lin
 	line = line.substr(pos0, pos2 < pos3 ? pos2 - pos0 : pos3 - pos0);
 	pos0 = line.find("(ID");
 
-	//std::cout << "------------\n" << std::endl;
 
 	playerdata_container::playerdata data;
+	//std::cout << "------------\n" << std::endl;	
 
 	std::string cname = line.substr(0, pos0);
 	utils::trim(cname);
@@ -130,13 +118,30 @@ playerdata_container::playerdata playerdata_container::read_data(std::string lin
 	return data;
 }
 
-bool playerdata_container::checked(std::string str) {
-	auto where = std::find(_strings_parsed.begin(), _strings_parsed.end(), str);
 
-	if (where == _strings_parsed.end())
-		return false;
-	return true;
+playerdata_container::playerdata playerdata_container::get_joined_player_data(std::string line) {
+	playerdata_container::playerdata data;
+
+	//For CD Key in Joined as player line
+	//(?<=\()([[:alnum:]]{8})(?=\) Joined as Player)
+	std::regex regex_cd_key("(.{8})(?=\\) Joined as Player)", std::regex_constants::ECMAScript);
+	std::regex regex_player_name("](.*)(?=\\(.{8}\\))", std::regex_constants::ECMAScript);
+	
+	std::smatch match;
+
+	std::regex_search(line, match, regex_cd_key);
+	for (auto v : match)
+		data.cd_key = v;
+	
+	std::regex_search(line, match, regex_player_name);
+	for (auto v : match) {		
+		data.player_name = v;
+	}
+		
+
+	return data;
 }
+
 
 bool playerdata_container::exist(playerdata& player_data) {
 
@@ -156,4 +161,52 @@ bool playerdata_container::exist(playerdata& player_data) {
 	}	
 
 	return false;
+}
+
+std::vector<std::string> playerdata_container::find_cd_key_for(std::string field_value, playerdata_container::type t_field) {
+	std::vector<std::string> cd_keys;
+
+	for(auto& line : player_lines)		
+		if (field_value == get_field(line, t_field) && !utils::vector_string_val_exist(cd_keys, line.cd_key)) 
+			cd_keys.push_back(line.cd_key);			
+	
+	return cd_keys;
+}
+
+std::vector<std::string> playerdata_container::find_data_type_for(std::string field_value, playerdata_container::type t_field, playerdata_container::type return_t_field) {
+	std::vector<std::string> field_values;
+
+	for (auto& line : player_lines)
+		if (field_value == get_field(line, t_field) && !utils::vector_string_val_exist(field_values, get_field(line, return_t_field)))
+			field_values.push_back(get_field(line, return_t_field));
+
+	return field_values;
+}
+
+
+
+
+
+
+//Obselete yet still required as its used to control the amount of search loop done for some obscure reason.
+//Do not remove yet.
+
+std::vector<const char*> playerdata_container::get_remaining() {
+	std::vector<const char*> ret = {};
+	for (auto t : types()) for (auto& str : get_field_vector(_pdata_to_search, t)) if (!checked(str)) ret.insert(ret.end(), str);
+	return ret;
+}
+
+bool playerdata_container::checked(std::string str) {
+	auto where = std::find(_strings_parsed.begin(), _strings_parsed.end(), str);
+	if (where == _strings_parsed.end()) return false;
+	return true;
+}
+
+void playerdata_container::mark_checked() {
+	for (auto t : types()) {
+		for (auto& str : get_field_vector(_pdata_to_search, t)) {
+			_strings_parsed.insert(_strings_parsed.end(), str);
+		}
+	}
 }
