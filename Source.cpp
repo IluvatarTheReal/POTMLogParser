@@ -462,16 +462,18 @@ void print_crawling_results(playerdata_container& pc_data) {
 			std::vector<std::string> playername_characters = pc_data.find_data_type_for(i.player_name, playerdata_container::type::PNAME, playerdata_container::type::CHARNAME);
 			for (auto& character : playername_characters)
 			{
-				cd_keys_string = "";
-				playername_cd_keys = pc_data.find_cd_key_for(i.player_name, playerdata_container::type::PNAME);
-				for (auto& j : playername_cd_keys) {
-					if (cd_keys_string == "")
-						cd_keys_string += j;
-					else
-						cd_keys_string += ", " + j;
-				}
+				if (character.length() > 1) {
+					cd_keys_string = "";
+					playername_cd_keys = pc_data.find_cd_key_for(i.character_name, playerdata_container::type::CHARNAME);
+					for (auto& j : playername_cd_keys) {
+						if (cd_keys_string == "")
+							cd_keys_string += j;
+						else
+							cd_keys_string += ", " + j;
+					}
 
-				print_line("        " + character + "(" + cd_keys_string + ")" + "");
+					print_line("        " + character + "(" + cd_keys_string + ")" + "");
+				}				
 			}			
 		}
 	}

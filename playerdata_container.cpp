@@ -47,12 +47,12 @@ void playerdata_container::handle_line(std::string line) {
 		std::cout << "Playername: " << temp_data.player_name << std::endl;
 		std::cout << "Character name: " << temp_data.character_name << std::endl;
 		std::cout << "ID: " << temp_data.id << std::endl;*/
-		
-		
+
+
 
 		player_lines.push_back(temp_data);
 	}
-	
+
 }
 
 playerdata_container::playerdata playerdata_container::read_data(std::string line) {
@@ -60,12 +60,12 @@ playerdata_container::playerdata playerdata_container::read_data(std::string lin
 
 	//If the line is about a player login on a vault, read the line differently.
 	if (line.find("Joined as Player") != std::string::npos)
-		return get_joined_player_data(line);	
-	
+		return get_joined_player_data(line);
+
 	for (auto& it : exclusions) {
 		if (line.find(it) != std::string::npos)
 			return playerdata_container::playerdata();
-	}	
+	}
 
 	//TODO Use regex to find information
 
@@ -125,19 +125,24 @@ playerdata_container::playerdata playerdata_container::get_joined_player_data(st
 	//For CD Key in Joined as player line
 	//(?<=\()([[:alnum:]]{8})(?=\) Joined as Player)
 	std::regex regex_cd_key("(.{8})(?=\\) Joined as Player)", std::regex_constants::ECMAScript);
-	std::regex regex_player_name("](.*)(?=\\(.{8}\\))", std::regex_constants::ECMAScript);
-	
+	std::regex regex_player_name("](.*)(?=\\s\\(.{8}\\))", std::regex_constants::ECMAScript);
+
 	std::smatch match;
 
 	std::regex_search(line, match, regex_cd_key);
 	for (auto v : match)
 		data.cd_key = v;
-	
-	std::regex_search(line, match, regex_player_name);
-	for (auto v : match) {		
-		data.player_name = v;
+
+	if (std::regex_search(line, match, regex_player_name)) {
+		std::string val = match[1];
+		//std::cout << "Before \"" << val << "\"" << std::endl;
+		val.erase(0, 1);
+		//std::cout << "Between \"" << val << "\"" << std::endl;
+		/*if (val.length() > 1)
+			val.erase((val.length() - 1), (val.length()));*/
+		data.player_name = val;
+		//std::cout << "After \"" << val << "\"" << std::endl;
 	}
-		
 
 	return data;
 }
@@ -151,14 +156,14 @@ bool playerdata_container::exist(playerdata& player_data) {
 		for (auto t : types()) {
 			std::string new_result = get_field(player_data, t);
 			std::string old_result = get_field(line, t);
-		
+
 			if (new_result == old_result)
 				matching_fields++;
 		}
 
 		if (matching_fields == 5)
 			return true;
-	}	
+	}
 
 	return false;
 }
@@ -166,10 +171,10 @@ bool playerdata_container::exist(playerdata& player_data) {
 std::vector<std::string> playerdata_container::find_cd_key_for(std::string field_value, playerdata_container::type t_field) {
 	std::vector<std::string> cd_keys;
 
-	for(auto& line : player_lines)		
-		if (field_value == get_field(line, t_field) && !utils::vector_string_val_exist(cd_keys, line.cd_key)) 
-			cd_keys.push_back(line.cd_key);			
-	
+	for (auto& line : player_lines)
+		if (field_value == get_field(line, t_field) && !utils::vector_string_val_exist(cd_keys, line.cd_key))
+			cd_keys.push_back(line.cd_key);
+
 	return cd_keys;
 }
 
