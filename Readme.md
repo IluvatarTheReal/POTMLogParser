@@ -1,6 +1,7 @@
 
 # Log Compiler
-![](https://img.shields.io/badge/version-1.7-blue)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/IluvatarTheReal/POTMLogParser) ![](https://img.shields.io/badge/platform-linux-lightgrey)  
+![GitHub issues](https://img.shields.io/github/issues/IluvatarTheReal/POTMLogParser)
 
 Original design by Arawn
 
