@@ -1,6 +1,6 @@
 
 # Log Compiler
-![](https://img.shields.io/badge/version-1.6-blue)
+![](https://img.shields.io/badge/version-1.7-blue)
 
 Original design by Arawn
 
@@ -42,16 +42,19 @@ With an argument, only returns results before a given date (in the format DD MM 
 **-ar**  
 Switches the utility to area report mode. Note that most of this functionality is automated and will disregard most other flags (except -post and -pre).
 
-**-prof_cd**  
+**-prof**  
+Specifies that a crawling search is to be made with the search result.
+
+**-prof_cd (deprecated)**  
 Specifies that the provided primary term is a cd key for crawling search.
 
-**-prof_cn**  
+**-prof_cn (deprecated)**  
 Specifies that the provided primary term is a character name for crawling search.
 
-**-prof_pn**  
+**-prof_pn (deprecated)**  
 Specifies that the provided primary term is a player name for crawling search.
 
-**-prof_ip**  
+**-prof_ip (deprecated)**  
 Specifies that the provided primary term is an ip address for crawling search.
 
 **-nf**  
