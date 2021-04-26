@@ -12,6 +12,7 @@ namespace ARGS {
 	constexpr const char* PROF_CN = "prof_cn";
 	constexpr const char* PROF_PN = "prof_pn";
 	constexpr const char* PROF_IP = "prof_ip";
+	constexpr const char* PROF = "prof";
 	constexpr const char* NF = "nf";
 	constexpr const char* CONF = "conf";
 	constexpr const char* A = "a";

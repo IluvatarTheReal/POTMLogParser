@@ -8,9 +8,9 @@ void print_line(std::string line);
 void print_crawling_results(playerdata_container& pc_data);
 //bool vector_string_val_exist(std::vector<std::string>& the_vector, std::string the_value);
 
-
 bool print_console = false;
 bool print_file = true;
+
 
 std::fstream outfile;
 
@@ -61,7 +61,7 @@ int main(int argc, char* argv[]) {
 	//Check if we're crawling and set up appropriately.
 	bool crawling_search = false;
 	playerdata_container::type temp_type = playerdata_container::type::CDKEY;
-	if (args[ARGS::PROF_CD]) {
+	if (args[ARGS::PROF_CD] || args[ARGS::PROF]) {
 		crawling_search = true;
 	}
 	else if (args[ARGS::PROF_CN]) {
