@@ -3,7 +3,6 @@
 #include "arg_container.h"
 #include "usage_area.h"
 
-
 void print_line(std::string line);
 void print_crawling_results(playerdata_container& pc_data);
 //bool vector_string_val_exist(std::vector<std::string>& the_vector, std::string the_value);

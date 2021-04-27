@@ -136,3 +136,7 @@ $RECYCLE.BIN/
 .DS_Store
 
 _NCrunch*
+
+# CPP Stuff
+
+*.o
