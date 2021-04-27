@@ -34,6 +34,18 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\arg_container.cpp" />
+    <ClCompile Include="src\playerdata_container.cpp" />
+    <ClCompile Include="src\Source.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\arg_container.h" />
+    <ClInclude Include="src\playerdata_container.h" />
+    <ClInclude Include="src\result_line.h" />
+    <ClInclude Include="src\usage_area.h" />
+    <ClInclude Include="src\utils.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{23d5d4f2-9de7-465b-baba-b4d18e31f1df}</ProjectGuid>
     <Keyword>Linux</Keyword>
@@ -74,18 +86,9 @@
   <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
-  <ItemGroup>
-    <ClCompile Include="arg_container.cpp" />
-    <ClCompile Include="playerdata_container.cpp" />
-    <ClCompile Include="Source.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="arg_container.h" />
-    <ClInclude Include="playerdata_container.h" />
-    <ClInclude Include="result_line.h" />
-    <ClInclude Include="usage_area.h" />
-    <ClInclude Include="utils.h" />
-  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <SourcePath>src</SourcePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <CustomBuildStep>
       <Inputs>%(Inputs)</Inputs>
