@@ -422,7 +422,7 @@ int main(int argc, char* argv[]) {
 	if (!args[ARGS::NF]) std::cout << "Operation complete (see file " << name << ")." << std::endl;
 	else std::cout << "Operation complete." << std::endl;
 }
-
+TEST FAIL
 
 void print_line(std::string line) {
 
