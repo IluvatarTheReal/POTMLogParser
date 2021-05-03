@@ -82,6 +82,9 @@ Include lines not containing a valid timestamp (Discarded by default as noise).
 **-p**  
 Print output to the console as well as generating an output file. Mutually exclusive with -nf.
 
+**-local**  
+Specify that the parser is being used on a local server installation and not on the main server's log vault.
+
 ## III. Crawling Search
 Crawling search is an experimental functionality that allows this utility to compile a list of all player accounts, cd-keys, ips, and characters associated with a
 given player, identified by any one of the aforementioned pieces of information. It does this by repeatedly iterating over the logs, pulling all player data from

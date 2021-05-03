@@ -17,7 +17,7 @@ arg_container::arg_container(int argc, char* argv[]) {
 		if (temp.substr(0, 1) == "-") {
 			
 			if (temp.length() < 2) {
-				std::cout << "Ill-formed flag detected." << std::endl;
+				std::cout << "Ill-formed flag detected." << std::endl; //TODO : Remove print, throw exception instead
 				return;
 			}
 
@@ -28,7 +28,7 @@ arg_container::arg_container(int argc, char* argv[]) {
 			last_flag = temp.substr(1);
 		}
 		else if (last_flag == "") {
-			std::cout << "Ill-formed flag detected." << std::endl;
+			std::cout << "Ill-formed flag detected." << std::endl; //TODO : Remove print, throw exception instead
 			return;
 		}
 		else {

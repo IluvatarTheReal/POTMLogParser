@@ -127,11 +127,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\arg_container.cpp" />
+    <ClCompile Include="src\log_file_fetcher.cpp" />
     <ClCompile Include="src\playerdata_container.cpp" />
     <ClCompile Include="src\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\arg_container.h" />
+    <ClInclude Include="src\log_file_fetcher.h" />
     <ClInclude Include="src\playerdata_container.h" />
     <ClInclude Include="src\result_line.h" />
     <ClInclude Include="src\usage_area.h" />

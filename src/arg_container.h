@@ -14,13 +14,13 @@ namespace ARGS {
 	constexpr const char* PROF_IP = "prof_ip";
 	constexpr const char* PROF = "prof";
 	constexpr const char* NF = "nf";
-	constexpr const char* CONF = "conf";
 	constexpr const char* A = "a";
 	constexpr const char* O = "o";
 	constexpr const char* E = "e";
 	constexpr const char* NOO = "noo";
 	constexpr const char* ND = "nd";
 	constexpr const char* P = "p";
+	constexpr const char* LOCAL = "local";
 }
 
 class arg_container {
