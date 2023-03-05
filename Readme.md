@@ -1,7 +1,6 @@
 
-https://img.shields.io/github/actions/workflow/status/IluvatarTheReal/POTMLogParser/.github/workflow/build.yml?branch=master
 # Log Compiler
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/IluvatarTheReal/POTMLogParser) ![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/IluvatarTheReal/POTMLogParser/.github/workflow/build.yml?branch=master) ![GitHub issues](https://img.shields.io/github/issues/IluvatarTheReal/POTMLogParser)   
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/IluvatarTheReal/POTMLogParser) ![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/IluvatarTheReal/POTMLogParser/.github/workflows/build.yml?branch=master) ![GitHub issues](https://img.shields.io/github/issues/IluvatarTheReal/POTMLogParser)   
 ![](https://img.shields.io/badge/platform-linux-lightgrey)  
 
 Original design by Arawn
